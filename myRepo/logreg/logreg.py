@@ -1,7 +1,8 @@
 import random
-from numpy import zeros, sign, dot
+from numpy import zeros, sign, dot, argsort
 from math import exp, log
 from collections import defaultdict
+import heapq
 
 import argparse
 
@@ -46,6 +47,7 @@ class Example:
                 self.x[vocab.index(word)] += float(count)
                 self.nonzero[vocab.index(word)] = word
         self.x[0] = 1
+#print "vocab: " + str(len(vocab))
 
 
 class LogReg:
@@ -111,7 +113,7 @@ class LogReg:
             print self.last_update
             print
         '''
-        
+        #print "number of features" +str(len(self.beta))
         for feature in range(0,len(self.beta)):
             #print "feature" + str(feature)
             #print self.last_update[feature]+1
@@ -202,3 +204,32 @@ if __name__ == "__main__":
                 ho_lp, ho_acc = lr.progress(test)
                 print("Update %i\tTP %f\tHP %f\tTA %f\tHA %f" %
                       (update_number, train_lp, ho_lp, train_acc, ho_acc))
+
+    #Access the best and worst features
+    #Use some fancy python and numpy stuff to access the largest
+    #and the their indices
+    #largest positive: good baseball
+    #smallest (i.e. most negative): good hockey
+    #values near 0: worst predictors
+
+    #print heapq.nlargest(5,lr.beta)
+    #print heapq.nsmallest(5,lr.beta)
+    print
+    largest =  argsort(lr.beta)[-5:]
+    smallest = argsort(lr.beta)[0:5]
+    print "Top Five for Baseball"
+    for x in largest:
+        print vocab[x]
+    print
+    print "Top Five for Hockey"
+    for x in smallest:
+        print vocab[x]
+    print
+
+    worst = map(abs,lr.beta)
+    #print heapq.nsmallest(5,worst)
+    #print
+    worstIndex = argsort(worst)[0:5]
+    print "Five worst predictors"
+    for x in worstIndex:
+        print vocab[x]
