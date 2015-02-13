@@ -1,0 +1,52 @@
+\documentclass[110pt, oneside]{article}   	% use "amsart" instead of "article" for AMSLaTeX format
+\usepackage[margin=0.75in]{geometry}            		% See geometry.pdf to learn the layout options. There are lots.
+\geometry{letterpaper}                   		% ... or a4paper or a5paper or ... 
+%\geometry{landscape}                		% Activate for rotated page geometry
+%\usepackage[parfill]{parskip}    		% Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}				% Use pdf, png, jpg, or eps§ with pdflatex; use eps in DVI mode
+								% TeX will automatically convert eps --> pdf in pdflatex		
+\usepackage{amssymb}
+\usepackage{float}
+
+%SetFonts
+
+%SetFonts
+
+
+\title{Feature Engineering, CSCI 5622 Homework 3 }
+\author{Alex Gendreau}
+%\date{}							% Activate to display a given date or no date
+
+\begin{document}
+\maketitle
+%\section{}
+%\subsection{}
+
+I found determining which features to use for this assignment very difficult. Firstly, the CountVectorizer does a good baseline job of predicting the questions, classifying over $70\%$ of my cross validation data correctly. Secondly, many of the features I tried initially did not show improvement on my cross validation set. The only way that I was eventually able to improve my results led to extreme overfitting of the training data by using a very large number of features.\\
+
+First to better understand the data, I needed to determine a cross validation set since the test data is not categorized.  To do this, I simply shuffled my training data and chose a subset to be my cross validation set, usually about $25\%$.  This would allow me to see how well my model predicted results on test data.  It would also show me which categories were getting confused most often.  As I would assume, the largest areas of confusion were among closely related fields (i.e. between Chemistry and Science or Fine Arts and Literature).  \\
+
+From here I began to think about what to use as features.  Since CountVectorizer uses each words as a feature, I needed to find orthogonal features to complement the vocabulary and analyze the vocabulary to prevent excessively similar features (i.e. should material and materials be unique features) by examining only the root of the word by eliminating 'ing', 'ed', and ' 's '.  Also to more normalize the questions, I stripped away all punctuation from the words.  Unfortunately this did not do much to improve the accuracy of my model on the predicting the categories of my cross validation set. \\
+
+I noticed from the top ten features used in predicting my training set often contained common words, so I used a list of common words in the feature engineering library of sklearn as well as some a I found on the internet and eliminated these words as features.  This led to a small improvement in my model's behavior on the cross validation set.\\
+
+Next I thought about what sort of numerical observations I could make about the questions.  Two things came to mind, the length of the sentence and the number of proper nouns in the question.  I counted these approximately by splitting the question on the period to count the number of sentences (this would incorrectly count something like Dr. as a sentence) and then counted the number of capitalized words in the question.  To total number of proper nouns is approximately total capitalized words minus number of sentences.  Unfortunately these features also did greatly improve the predicative capabilities of my model. \\
+
+Lastly I thought that some common phrases might be useful features, so I not only used all words as features but also two words phrases constructed from the sentences (i.e. first word and second word are a pair, second word and third word are a pair).  This led me to the have my first cross validation accuracy of over $80\%$.  However with the addition of this feature the accuracy of my training data was well over $99\%$, so I am overfitting my training data to the extreme.  Unfortunately I was unable to determine other useful features or prevent the overfitting.\\
+
+ACKNOWLEDGEMENTS: I make use to scikit learn documentation, the python reference manual, piazza, and stack overflow for my python syntax and semantics questions.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}  
