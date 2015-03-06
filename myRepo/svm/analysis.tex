@@ -1,0 +1,72 @@
+\documentclass[110pt, oneside]{article}   	% use "amsart" instead of "article" for AMSLaTeX format
+\usepackage[margin=1in]{geometry}            		% See geometry.pdf to learn the layout options. There are lots.
+\geometry{letterpaper}                   		% ... or a4paper or a5paper or ... 
+%\geometry{landscape}                		% Activate for rotated page geometry
+%\usepackage[parfill]{parskip}    		% Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}				% Use pdf, png, jpg, or eps§ with pdflatex; use eps in DVI mode
+								% TeX will automatically convert eps --> pdf in pdflatex		
+\usepackage{amssymb}
+\usepackage{float}
+
+%SetFonts
+
+%SetFonts
+
+
+\title{SVM, CSCI 5622 Homework 5 }
+\author{Alex Gendreau}
+%\date{}							% Activate to display a given date or no date
+
+\begin{document}
+\maketitle
+%\section{}
+%\subsection{}
+
+For my analysis I explored two kernels linear and radial basis kernel (RBF).  First I filtered the MNIST data from the k-nearest neighbors homework to include only 3's and 8's.  Then I train each kernel on $60\%$ of the data while varying the $C$ parameter, how much we want to avoid misclassifying examples, from $0.001$ to $10000$ increase $C$ by a factor of 10 each iteration to determine which value of $C$ produces the best results.  To determine which $C$ to use I performed cross validation on the remaining $40\%$ of the training data.  The best $C$ is the value which produces the smallest number of errors on the cross validation set.  Once the best value is determined, we train the entire training set using that value and then test our SVM on the test set.  The RBF kernel performed slightly better than the linear kernel.
+
+\section{Linear Kernel}
+We found the best $C$ value to be $0.1$ which led to a $59$ total errors on the test set and $2.89\%$ error.  
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.3]{linearkernel.png}
+\caption{The percent error on the cross validation set using different values of $C$}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.3]{sv_1.png}
+\caption{An example of a support vector in image form}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.3]{sv_2.png}
+\caption{Another example of a support vector in image form}
+\end{figure}
+
+\section{RBF Kernel}
+We found the best $C$ value to be $1000$ which led to a $18$ total errors on the test set and $0.88\%$ error.  
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.3]{rbfkernel.png}
+\caption{The percent error on the cross validation set using different values of $C$}
+\end{figure}
+
+
+ACKNOWLEDGEMENTS: I make use to scikit learn documentation, the python reference manual, piazza, and 
+the user guide for support vector machines, \\
+http://www.brainvoyager.com/bvqx/doc/UsersGuide/MVPA/SupportVectorMachinesSVMs.html
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}  

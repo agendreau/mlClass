@@ -1,8 +1,11 @@
 from __future__ import division
-from numpy import array, zeros, dot, multiply, ceil, power
+from numpy import array, zeros, dot, multiply, ceil, power, sqrt
 import argparse, sys
 
 from sklearn import svm
+
+import matplotlib.cm as cm
+import matplotlib.pyplot as plt
 
 
 
@@ -134,7 +137,7 @@ def computeSVM(svmType,data):
     minError = sys.maxint
     cv = []
     for i in range(-3,5):
-        print "iteration"
+        print "iteration: " +str(i+3)
         newC = power(10.0,i)
         clf.C = newC
         result = clf.fit(data.train_x[:num_ex], data.train_y[:num_ex])
@@ -148,7 +151,8 @@ def computeSVM(svmType,data):
         if error<minError:
             minError = error
             bestC = newC
-        cv.append((newC,error))
+
+        cv.append((newC,error,100*(error/len(data.train_y[num_ex:]))))
     
     print "minimum errors: " + str(minError)
     print "best C: " + str(bestC)
@@ -171,6 +175,8 @@ def computeSVM(svmType,data):
     else:
         return (cv,error,100*(error/len(data.test_y)),None)
 
+#My sci-kit learn SVM
+'''
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='SVM Classifier Options')
@@ -184,33 +190,32 @@ if __name__ == "__main__":
     data = Numbers("../data/mnist.pkl.gz")
     #print data.train_x[:args.limit], data.train_y[:args.limit]
     (cvLinear,t_errorLinear,p_errorLinear,support_vectorsLinear) = computeSVM('linear',data)
-    (cvRBF,t_errorRBF,p_errorRBF,support_vectorsRBF) = computeSVM('rbf',data)
+    #(cvRBF,t_errorRBF,p_errorRBF,support_vectorsRBF) = computeSVM('rbf',data)
 
-    print support_vectorsLinear[0]
-    print support_vectorsLinear[1]
-    print support_vectorsLinear[2]
-
-
-
-#print "best C: " + str(100*(error/len(data.test_y)))
+    print "Linear Results"
+    print cvLinear
+    print t_errorLinear
+    print p_errorLinear
     
-#print clf.predict(data.test_x[0])
-
-    # You should not have to modify any of this code
-'''
-    if args.limit > 0:
-        print("Data limit: %i" % args.limit)
-        knn = Knearest(data.train_x[:args.limit], data.train_y[:args.limit],args.k)
-    else:
-        knn = Knearest(data.train_x, data.train_y, args.k)
-    print("Done loading data")
+    print "RBF Results"
+    print cvRBF
+    print t_errorRBF
+    print p_errorRBF
 
 
-    confusion = knn.confusion_matrix(data.test_x, data.test_y)
-    print("\t" + "\t".join(str(x) for x in xrange(10)))
-    print("".join(["-"] * 90))
-    for ii in xrange(10):
-        print("%i:\t" % ii + "\t".join(str(confusion[ii].get(x, 0))
-                                       for x in xrange(10)))
-    print("Accuracy: %f" % knn.acccuracy(confusion))
+    n = len(support_vectorsLinear[0])
+    n_root = sqrt(n)
+    plt.imshow(support_vectorsLinear[0].reshape((n_root, n_root)), cmap = cm.Greys_r)
+    plt.show()
+    plt.imshow(support_vectorsLinear[1].reshape((n_root, n_root)), cmap = cm.Greys_r)
+    plt.show()
+    plt.imshow(support_vectorsLinear[2].reshape((n_root, n_root)), cmap = cm.Greys_r)
+    plt.show()
+
+    #print support_vectorsLinear[0]
+    #print support_vectorsLinear[1]
+    #print support_vectorsLinear[2]
+
+
+
 '''
